@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+  labels:
+      tier: db
+      app: postgres-Deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: db-postgres
+  template:
+    metadata:
+      name: db-pod
+      labels:
+        tier: db-postgres
+    spec:
+      containers:
+      - name: db-container
+        image: postgres:15-alpine
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: db-data
+      volumes:
+      - name: db-data
+        emptyDir: {} 
